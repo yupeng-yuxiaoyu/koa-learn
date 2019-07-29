@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    // axios.get('http://localhost:4000/users').then((res) => {
+    //   alert(res.data);
+    // });
+    axios.get('http://localhost:4000/api/userInfo', {
+      headers: {
+        'Authorization': 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE1NjQzOTc0ODEsImV4cCI6MTU2NDQwMTA4MX0.9Te8HwHli8lFgkHIsWQWa5FjqtVKqtmDSdU2IBnd_o8'
+      }
+    }).then((res) => {});
+  </script>
+</body>
+
+</html>
