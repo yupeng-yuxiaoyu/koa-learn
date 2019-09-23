@@ -6,20 +6,46 @@ const fs = require('fs')
 const app = new Koa();
 const server = require('http').createServer(app.callback())
 const io = require('socket.io')(server)
+const history = require('koa2-history-api-fallback')
+const cors = require('koa2-cors');
+const bodyParser = require('koa-bodyparser')
 
 const router = new Router()
+
+app.use(bodyParser());
+app.use(cors());
+
+const airticleList = []
 
 router.get('/', (ctx, next) => {
   ctx.type = 'text/html'
   ctx.body = fs.createReadStream('./fe/teamwork-note/dist/index.html')
 })
 
+router.post('/api/airticle', (ctx, next) => {
+  airticleList.push(ctx.request.body);
+  ctx.body={
+    success: 1,
+  }
+})
 app.use(staticFiles(path.resolve(__dirname, './static')))
 app.use(router.routes())
-
+// 前端(vue)路由
+// 所有 navigate 请求重定向到 '/'
+app.use(history({
+  htmlAcceptHeaders: ['text/html'],
+  index: '/',
+  verbose: true
+}));
+let message = "";
 io.on('connection', (socket) => {
+  console.log('用户连接');
+  if (message) {
+    io.emit('changeMessage', message);
+  }
   socket.on('changeMessage', msg => {
     console.log('msg :', msg);
+    message = msg;
     io.emit('changeMessage', msg);
   })
   socket.on('disconnect', () => {
