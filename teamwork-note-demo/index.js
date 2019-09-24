@@ -23,9 +23,23 @@ router.get('/', (ctx, next) => {
 })
 
 router.post('/api/airticle', (ctx, next) => {
-  airticleList.push(ctx.request.body);
-  ctx.body={
-    success: 1,
+  const obj = Object.assign({}, ctx.request.body, {
+    id: airticleList.length + 1,
+  })
+  airticleList.push(obj);
+  ctx.body = {
+    code: 1,
+    data: {
+      id: obj.id,
+    }
+  }
+})
+router.get('/api/airticleList', (ctx, next) => {
+  ctx.body = {
+    code: 1,
+    data: {
+      airticle_list: airticleList,
+    }
   }
 })
 app.use(staticFiles(path.resolve(__dirname, './static')))
@@ -37,12 +51,12 @@ app.use(history({
   index: '/',
   verbose: true
 }));
-let message = "";
+// let message = "";
 io.on('connection', (socket) => {
   console.log('用户连接');
-  if (message) {
-    io.emit('changeMessage', message);
-  }
+  // if (message) {
+  //   io.emit('changeMessage', message);
+  // }
   socket.on('changeMessage', msg => {
     console.log('msg :', msg);
     message = msg;
